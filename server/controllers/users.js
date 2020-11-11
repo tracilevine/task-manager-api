@@ -1,4 +1,4 @@
-const User = require("./db/models/user"),
+const User = require("../db/models/user"),
   cloudinary = require("cloudinary").v2,
   jwt = require("jsonwebtoken");
 
@@ -6,7 +6,7 @@ const User = require("./db/models/user"),
 // Create a user
 // ***********************************************//
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res) =>{
   //create request body
   const { name, email, password } = req.body;
 
@@ -15,24 +15,24 @@ exports.createUser = async (req, res) => {
     const user = new User({
       name,
       email,
-      password,
+      password
     });
     //once user is created we will save the user in MongoDB
     await user.save();
 
     //now we will create the users token
     const token = await user.generateAuthToken();
-    res.cookies("jwt", token, {
-      httpOnly: true,
-      sameSite: "Strict",
+    res.cookie('jwt', token, {
+        httpOnly: true,
+        sameSite: 'Strict',
       //when you're in production your .env values must be secure
       //secure - Boolean: Marks the cookie to be used with HTTPS only.
-      secure: process.env.NODE_ENV !== "production" ? false : true,
+      secure: process.env.NODE_ENV !== 'production' ? false : true
     });
     //sends back to the front-end
-    res.json(user);
+    res.status(201).json(user);
   } catch (e) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: e.toString() });
   }
 };
 

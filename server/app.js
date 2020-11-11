@@ -7,4 +7,7 @@ const express = require('express'),
 // Parse incoming JSON into objects
 app.use(express.json());
 
+//Unauthenticated routes
+app.use('/api/users', openRoutes);
+
 module.exports = app;
